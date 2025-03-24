@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./asset/style.css">
+    <title>PVX BOT</title>
+</head>
+
+<body>
+    <section class="left-part">
+        <img class="bot-img" src="./asset/bot.jpg" alt="">
+        <a href="https://github.com/Shubhamrawat5/whatsapp-bot-ts">
+            <h1 class="pvx-bot">PVX BOT</h1>
+        </a>
+
+        <div class="github-stats">
+            <div class="github-stat">
+                <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16"
+                    data-view-component="true">
+                    <path fill-rule="evenodd"
+                        d="M8 .25a.75.75 0 01.673.418l1.882 3.815 4.21.612a.75.75 0 01.416 1.279l-3.046 2.97.719 4.192a.75.75 0 01-1.088.791L8 12.347l-3.766 1.98a.75.75 0 01-1.088-.79l.72-4.194L.818 6.374a.75.75 0 01.416-1.28l4.21-.611L7.327.668A.75.75 0 018 .25zm0 2.445L6.615 5.5a.75.75 0 01-.564.41l-3.097.45 2.24 2.184a.75.75 0 01.216.664l-.528 3.084 2.769-1.456a.75.75 0 01.698 0l2.77 1.456-.53-3.084a.75.75 0 01.216-.664l2.24-2.183-3.096-.45a.75.75 0 01-.564-.41L8 2.694v.001z">
+                    </path>
+                </svg>
+                <p class="github-stats-count" id="star-count">-</p>
+            </div>
+            <div class="github-stat">
+                <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16"
+                    data-view-component="true">
+                    <path fill-rule=" evenodd"
+                        d="M5 3.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm0 2.122a2.25 2.25 0 10-1.5 0v.878A2.25 2.25 0 005.75 8.5h1.5v2.128a2.251 2.251 0 101.5 0V8.5h1.5a2.25 2.25 0 002.25-2.25v-.878a2.25 2.25 0 10-1.5 0v.878a.75.75 0 01-.75.75h-4.5A.75.75 0 015 6.25v-.878zm3.75 7.378a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm3-8.75a.75.75 0 100-1.5.75.75 0 000 1.5z">
+                    </path>
+                </svg>
+                <p class="github-stats-count" id="fork-count">-</p>
+            </div>
+        </div>
+
+        <!-- <img class="bot-img" src="./asset/image.jpg" alt=""> -->
+
+        <h1 class="main-heading">CREATE YOUR</h1>
+        <h1 class="main-heading">WHATSAPP BOT</h1>
+        <p class="sub-heading">with easy steps</p>
+        <img class="down-arrow" src="./asset/arrows.png" alt="">
+        <div class="btn-container">
+            <a href="https://github.com/Shubhamrawat5/whatsapp-bot-ts">
+                <button>Github</button>
+            </a>
+            <a href="https://chat.whatsapp.com/DCo1UEVYUt1GEclJ1uZzjA">
+                <button>Whatsapp</button>
+            </a>
+            <!-- <a href="https://youtu.be/2gBzapttokk">
+                <button>Youtube</button>
+            </a> -->
+        </div>
+    </section>
+    <section class="right-part">
+        <h1 class="features">FEATURES</h1>
+        <ol>
+            <li>Commands with admin access include adding & removing members, giving warnings, adding in blacklist
+                and
+                also changing the group settings.
+                </p>
+            <li>Some of the commands that members can access are sticker maker, insta-youtube video downloader,
+                cricket live scores, group voting, etc.</p>
+            <li>It also keeps track of various stats like the number of messages each member has sent in various
+                PVX
+                groups, the most active group, the list of inactive members etc.</p>
+            <li>It posts daily news in Tech and Study groups and also greets new members with a welcome message
+                whenever they join any of the PVX groups.
+                </p>
+            <li>It automatically bans any user with a non-Indian number (any number without +91 code).
+                </p>
+            <li>It also forwards every sticker that is sent to any of the PVX groups to another group i.e. Sticker
+                Only, where members can have access to different different types of stickers.</p>
+        </ol>
+    </section>
+</body>
+
+<script>
+
+    const getGithubInfo = async () => {
+        let url = "https://api.github.com/repos/Shubhamrawat5/whatsapp-bot-ts"
+        let res = await fetch(url)
+        let data = await res.json();
+
+        let stars = data["stargazers_count"];
+        let forks = data["forks_count"];
+        console.log(stars, forks);
+
+        document.getElementById("star-count").innerText = stars;
+        document.getElementById("fork-count").innerText = forks;
+    }
+
+    getGithubInfo()
+
+
+</script>
+
+</html>

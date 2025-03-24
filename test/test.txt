@@ -1,0 +1,153 @@
+$koyeb instances logs 84238b12
+
+https://pm2.keymetrics.io/docs/integrations/heroku/
+npm run start
+
+heroku logs --tail -a pvx-bot-md1
+npm install ytdl-core@4.10.0
+npm i git://github.com/adiwajshing/Baileys.git#a75d9118bdc7829a12dcb5f758dc5f92528a272d
+npm i github:WhiskeySockets/Baileys#nightly
+
+
+catch (err) {
+  if (err.code == 23505) {
+    //https://github.com/LinusU/pg-error-constants
+  }
+}
+
+# ------------------------------- DROP TABLE ------------------------------- #
+begin;
+set transaction read write;
+DROP table count;
+COMMIT;
+
+SELECT * FROM countmember WHERE memberjid='919503442316@s.whatsapp.net' and groupjid='919557666582-1584193120@g.us';
+SELECT *,count(*) FROM countmember GROUP BY memberjid, groupjid, count HAVING count(*) > 1; //duplicate rows with all 3 column same
+select memberjid,groupjid,count(*) from countmember group by memberjid,groupjid having count(*)>1; //duplicate rows with (memberjid,groupjid) same
+
+//delete duplicate with every column same
+delete from countwarning a using countwarning b where a=b and a.ctid < b.ctid;
+
+ALTER table countmember ADD COLUMN video_count INTEGER NOT NULL DEFAULT 0; 
+ALTER TABLE pvx_group DROP COLUMN commands_disabled; 
+
+INSERT INTO "public"."member" (memberjid, name, donation, milestones) VALUES ('91@s.whatsapp.net', 'PVX', 2500, '{}');
+INSERT into "public"."pvx_group" (groupjid,gname,link,commands_disabled) values('120363329317457388@g.us','<{PVX}> Crypto/Stocks Discussion','https://chat.whatsapp.com/DkfARZxRBOcLmxdbmI0nrv','{}');
+
+INSERT into birthday (memberjid, name, username, date, month, year, place) VALUES('91@s.whatsapp.net','name','username',19,11,1998,'place');
+
+begin;
+set transaction read write;
+ALTER TABLE countmember ADD COLUMN day text;
+COMMIT;
+
+ALTER TABLE blacklist
+RENAME COLUMN by to admin;
+
+UPDATE blacklist SET memberjid = memberjid || '@s.whatsapp.net';
+
+//delete row
+begin;
+set transaction read write;
+delete from countmember WHERE groupjid='919557666582-1582555632@g.us';
+COMMIT;
+
+begin;
+set transaction read write;
+delete from countmember WHERE count<=5;
+COMMIT;
+
+begin;
+set transaction read write;
+UPDATE donation SET amount=100 WHERE name='Kumar';
+COMMIT;
+
+
+begin;
+set transaction read write;
+delete FROM countmember where groupjid='919557666582-1553695938@g.us';
+COMMIT;
+
+begin;
+set transaction read write;
+Alter table countmember
+Add constraint combi
+primary key (memberjid,groupjid); 
+COMMIT;
+
+
+Web-server running!
+
+Local file written
+using WA v2.2222.11, isLatest: true
+connection update {
+  connection: 'connecting',
+  receivedPendingNotifications: false,
+  qr: undefined
+}
+Connected
+connection update { connection: 'open' }
+------------------------------------------------
+Web-server running!
+
+Local file written
+using WA v2.2222.11, isLatest: true
+connection update {
+  connection: 'connecting',
+  receivedPendingNotifications: false,
+  qr: undefined
+}
+Connected
+connection update { connection: 'open' }
+connection update { receivedPendingNotifications: true }
+
+
+
+using WA v2.2222.11, isLatest: true
+connection update {
+  connection: 'connecting',
+  receivedPendingNotifications: false,
+  qr: undefined
+}
+
+
+$node --trace_gc index.js
+--inspect
+v8.writeHeapSnapshot
+process.memoryUsage
+
+
+$node --inspect index.js
+chrome://inspect
+
+
+alter table countwarning add check(count BETWEEN 1 and 3);
+
+// memberjid that are in countmember but not in member table
+(SELECT countmember.memberjid, member.name from countmember left join member ON countmember.memberjid = member.memberjid WHERE name IS NULL group by countmember.memberjid, member.name ORDER BY memberjid)
+
+
+const main = async () => {
+  const res = await pool.query(
+    "SELECT * FROM blacklist WHERE memberjid NOT IN (SELECT memberjid FROM member);"
+  );
+
+  let time = 500;
+  console.log(res.rows);
+  res.rows.forEach((member, index) => {
+    time += 500;
+    const { memberjid } = member;
+    const number = memberjid.split("@")[0];
+    setTimeout(async () => {
+      console.log(number, index + 1);
+      await pool.query("INSERT INTO member VALUES($1,$2,$3,$4);", [
+        memberjid,
+        number,
+        0,
+        [],
+      ]);
+    }, time);
+  });
+};
+
+main();

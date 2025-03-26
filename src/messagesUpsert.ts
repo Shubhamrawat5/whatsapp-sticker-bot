@@ -469,13 +469,6 @@ export const messagesUpsert = async (
         message = `Did you mean ${prefix}${matches.bestMatch.target}\n\n${message}`;
       }
 
-      // const res = await bot.sendMessage("120363417696270115@newsletter", {
-      //   text: "hey",
-      // });
-      // const res2 = await bot.sendMessage("120363303907535182@g.us", {
-      //   text: "hey",
-      // });
-      // console.log(res, res2);
       await reply(message);
       // if (command) {
       // await addUnknownCmd(command);

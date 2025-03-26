@@ -9,6 +9,7 @@ export type GroupsUpsert = GroupMetadata[];
 export const groupsUpsert = async (msgs: GroupsUpsert, bot: Bot) => {
   try {
     console.log("[groups.upsert]");
+    console.log(msgs);
     msgs.forEach(async (msg) => {
       const from = msg.id;
       cache.del(`${from}:groupMetadata`);

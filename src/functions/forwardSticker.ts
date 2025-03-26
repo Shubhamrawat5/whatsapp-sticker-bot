@@ -3,9 +3,10 @@ import {
   proto,
   toBuffer,
 } from "@whiskeysockets/baileys";
-import { Exif } from "wa-sticker-formatter";
+import { createSticker, Exif } from "wa-sticker-formatter";
 import { Bot } from "../interfaces/Bot";
-import { pvxgroups } from "../utils/constants";
+// import { pvxgroups } from "../utils/constants";
+import { Readable } from "stream";
 
 // TODO: GLOBAL VARIALBES
 let countSent = 0;
@@ -19,11 +20,13 @@ const forwardSticker = async (
   bot: Bot,
   downloadFilePath: proto.Message.IStickerMessage
 ): Promise<boolean> => {
-  const randomBoolean = Math.random() < 0.5;
-  if (!randomBoolean) {
-    console.log("RandomBoolean", randomBoolean);
-    return false;
-  }
+  // const randomBoolean = Math.random() < 0.5;
+  // if (!randomBoolean) {
+  //   console.log("RandomBoolean", randomBoolean);
+  //   return false;
+  // }
+
+  console.log(JSON.stringify(downloadFilePath));
 
   try {
     const stickerChecksum = downloadFilePath.fileSha256
@@ -39,36 +42,97 @@ const forwardSticker = async (
     last20SentStickersSum.shift();
     last20SentStickersSum.push(stickerChecksum);
     countIn += 1;
-    const stream = await downloadContentFromMessage(
-      downloadFilePath,
-      "sticker"
-    );
+    // const stream = await downloadContentFromMessage(
+    //   downloadFilePath,
+    //   "sticker"
+    // );
 
-    const buffer = await toBuffer(stream);
+    // const buffer = await toBuffer(stream);
 
-    const webpWithExif = await new Exif({
-      pack: "BOT 🤖",
-      author: "pvxcommunity.com",
-    }).add(buffer);
+    // const webpWithExif = await new Exif({
+    //   pack: "BOT 🤖",
+    //   author: "pvxcommunity.com",
+    // }).add(buffer);
+
+    // const stickerBuffer = await createSticker(buffer, {
+    //   pack: "BOT 🤖",
+    //   author: "pvxcommunity.com",
+    // });
+
+    const plaintext = proto.Message.encode({
+      stickerMessage: downloadFilePath,
+    }).finish();
+    // console.log(plaintext);
+    // console.log(webpWithExif);
+
+    // console.log("STICKER!");
+
+    // const bufferStream = new Readable();
+    // bufferStream._read = () => {}; // _read is required, but we don't need to implement it
+    // bufferStream.push(webpWithExif); // Push the buffer to the stream
+    // bufferStream.push(null); // End the stream
+
+    // const uploadedMedia = await bot.waUploadToServer(bufferStream, {
+    //   mediaType: "sticker", // Media type (sticker in this case)
+    // });
+
+    // Create the plaintext node
+    // const plaintextNode = {
+    //   tag: "plaintext",
+    //   attrs: {},
+    //   content: { stickerMessage: webpWithExif },
+    // };
+
+    // Create the message node
+    // const node = {
+    //   tag: "message",
+    //   attrs: {
+    //     to: "120363417696270115@newsletter",
+    //     type: "text",
+    //   },
+    //   content: [plaintextNode],
+    // };
+
+    // Send the query
+    await bot.query({
+      tag: "message",
+      attrs: {
+        to: "120363417696270115@newsletter",
+        type: "text",
+      },
+      content: [
+        {
+          tag: "plaintext",
+          attrs: {},
+          content: plaintext,
+        },
+      ],
+    });
+    // console.log(res);
+
+    // const res1 = await bot.sendMessage("120363417696270115@newsletter", {
+    //   sticker: webpWithExif, // Provide the sticker buffer here
+    // });
+    // console.log(res1);
 
     // 1000*60*60*24 = 86400ms = 1 day
-    await bot.sendMessage(
-      pvxgroups.pvxstickeronly1,
-      { sticker: webpWithExif },
-      {
-        ephemeralExpiration: 86400,
-        mediaUploadTimeoutMs: 1000 * 60,
-      }
-    );
+    // await bot.sendMessage(
+    //   pvxgroups.pvxstickeronly1,
+    //   { sticker: webpWithExif },
+    //   {
+    //     ephemeralExpiration: 86400,
+    //     mediaUploadTimeoutMs: 1000 * 60,
+    //   }
+    // );
 
-    await bot.sendMessage(
-      pvxgroups.pvxstickeronly2,
-      { sticker: webpWithExif },
-      {
-        ephemeralExpiration: 86400,
-        mediaUploadTimeoutMs: 1000 * 60,
-      }
-    );
+    // await bot.sendMessage(
+    //   pvxgroups.pvxstickeronly2,
+    //   { sticker: webpWithExif },
+    //   {
+    //     ephemeralExpiration: 86400,
+    //     mediaUploadTimeoutMs: 1000 * 60,
+    //   }
+    // );
 
     countSent += 1;
     console.log(

@@ -13,10 +13,10 @@ import countRemainder from "./functions/countRemainder";
 import forwardSticker from "./functions/forwardSticker";
 import { Bot } from "./interfaces/Bot";
 import getGroupAdmins from "./functions/getGroupAdmins";
-import { getGroupData } from "./db/pvxGroupDB";
+// import { getGroupData } from "./db/pvxGroupDB";
 import { MsgInfoObj } from "./interfaces/msgInfoObj";
 import { loggerBot, loggerTg, sendLogToOwner } from "./utils/logger";
-import { addUnknownCmd } from "./db/unknownCmdDB";
+// import { addUnknownCmd } from "./db/unknownCmdDB";
 import { CommandsObj } from "./interfaces/CommandsObj";
 import { DefaultBadge } from "./functions/addDefaultBadges";
 import {
@@ -31,15 +31,15 @@ export interface MessageUpsert {
   type: MessageUpsertType;
 }
 
-interface SpamMessageCheck {
-  [from: string]: {
-    [sender: string]: {
-      count: number;
-      body: string;
-    };
-  };
-}
-const spamMessageCheck: SpamMessageCheck = {};
+// interface SpamMessageCheck {
+//   [from: string]: {
+//     [sender: string]: {
+//       count: number;
+//       body: string;
+//     };
+//   };
+// }
+// const spamMessageCheck: SpamMessageCheck = {};
 
 export const messagesUpsert = async (
   msgs: MessageUpsert,
@@ -149,47 +149,54 @@ export const messagesUpsert = async (
 
       // Spam checker start
       // console.log(JSON.stringify(spamMessageCheck));
-      if (spamMessageCheck[from] && spamMessageCheck[from][sender]) {
-        if (spamMessageCheck[from][sender].body === body && body) {
-          // If the body is the same, increment the count
-          spamMessageCheck[from][sender].count += 1;
-        } else {
-          spamMessageCheck[from][sender].count = 1;
-          spamMessageCheck[from][sender].body = body;
-        }
-      } else {
-        spamMessageCheck[from] = {
-          [sender]: {
-            count: 1,
-            body,
-          },
-        };
-      }
+      // if (spamMessageCheck[from] && spamMessageCheck[from][sender]) {
+      //   if (spamMessageCheck[from][sender].body === body && body) {
+      //     // If the body is the same, increment the count
+      //     spamMessageCheck[from][sender].count += 1;
+      //   } else {
+      //     spamMessageCheck[from][sender].count = 1;
+      //     spamMessageCheck[from][sender].body = body;
+      //   }
+      // } else {
+      //   spamMessageCheck[from] = {
+      //     [sender]: {
+      //       count: 1,
+      //       body,
+      //     },
+      //   };
+      // }
 
-      if (spamMessageCheck[from][sender].count === 10) {
-        await sendLogToOwner(bot, JSON.stringify(spamMessageCheck));
-        console.log(
-          `Spam detected! The message "${body}" has been sent 10 times by ${senderNumber} in group ${groupName}`
-        );
-        await bot.sendMessage(pvxgroups.pvxsubadmin, {
-          text: `Spam detected! The message "${body}" has been sent 10 times by ${senderNumber} in group ${groupName}`,
-        });
-        const response = await bot.groupParticipantsUpdate(
-          from,
-          [sender],
-          "remove"
-        );
-        if (response[0].status === "200") {
-          await bot.sendMessage(from, {
-            text: "_✔ Number removed from group due to spam!_",
-          });
-        } else {
-          await bot.sendMessage(from, {
-            text: "_❌ There was a problem removing the user!_",
-          });
-        }
-      }
+      // if (spamMessageCheck[from][sender].count === 10) {
+      //   await sendLogToOwner(bot, JSON.stringify(spamMessageCheck));
+      //   console.log(
+      //     `Spam detected! The message "${body}" has been sent 10 times by ${senderNumber} in group ${groupName}`
+      //   );
+      //   await bot.sendMessage(pvxgroups.pvxsubadmin, {
+      //     text: `Spam detected! The message "${body}" has been sent 10 times by ${senderNumber} in group ${groupName}`,
+      //   });
+      //   const response = await bot.groupParticipantsUpdate(
+      //     from,
+      //     [sender],
+      //     "remove"
+      //   );
+      //   if (response[0].status === "200") {
+      //     await bot.sendMessage(from, {
+      //       text: "_✔ Number removed from group due to spam!_",
+      //     });
+      //   } else {
+      //     await bot.sendMessage(from, {
+      //       text: "_❌ There was a problem removing the user!_",
+      //     });
+      //   }
+      // }
       // Spam checker end
+
+      if (
+        msg.message.stickerMessage &&
+        from !== "120363417696270115@newsletter"
+      ) {
+        await forwardSticker(bot, msg.message.stickerMessage);
+      }
 
       // Forward all stickers
       if (
@@ -306,53 +313,53 @@ export const messagesUpsert = async (
       };
 
       // CHECK IF COMMAND IF DISABLED FOR CURRENT GROUP OR NOT, not applicable for group admin
-      let resDisabled: string[] | undefined = [];
-      if (groupMetadata && !isSenderGroupAdmin) {
-        resDisabled = cache.get(`${from}:resDisabled`);
-        if (!resDisabled) {
-          const getDisableCommandRes = await getGroupData(from);
-          resDisabled =
-            getDisableCommandRes.length &&
-            getDisableCommandRes[0].commands_disabled
-              ? getDisableCommandRes[0].commands_disabled
-              : [];
-          cache.set(`${from}:resDisabled`, resDisabled, 60 * 60);
-        }
-      }
-      if (resDisabled.includes(command)) {
-        await reply("❌ Command disabled for this group!");
-        return;
-      }
-      if (command === "enable" || command === "disable") {
-        cache.del(`${from}:resDisabled`);
-      }
+      // let resDisabled: string[] | undefined = [];
+      // if (groupMetadata && !isSenderGroupAdmin) {
+      //   resDisabled = cache.get(`${from}:resDisabled`);
+      //   if (!resDisabled) {
+      //     const getDisableCommandRes = await getGroupData(from);
+      //     resDisabled =
+      //       getDisableCommandRes.length &&
+      //       getDisableCommandRes[0].commands_disabled
+      //         ? getDisableCommandRes[0].commands_disabled
+      //         : [];
+      //     cache.set(`${from}:resDisabled`, resDisabled, 60 * 60);
+      //   }
+      // }
+      // if (resDisabled.includes(command)) {
+      //   await reply("❌ Command disabled for this group!");
+      //   return;
+      // }
+      // if (command === "enable" || command === "disable") {
+      //   cache.del(`${from}:resDisabled`);
+      // }
 
       // send every command info to my whatsapp number, won't work when I send something to bot
-      if (ownerNumberWithJid !== sender && ownerNumberWithJid) {
-        stats.commandExecuted += 1;
-        // await bot.sendMessage(ownerNumberWithJid, {
-        //   text: `${stats.commandExecuted}) [${prefix}${command}] [${groupName}]`,
-        // });
-        await loggerTg(
-          `${stats.commandExecuted}) [${prefix}${command}] [${groupName}]`
-        );
-      }
+      // if (ownerNumberWithJid !== sender && ownerNumberWithJid) {
+      //   stats.commandExecuted += 1;
+      //   // await bot.sendMessage(ownerNumberWithJid, {
+      //   //   text: `${stats.commandExecuted}) [${prefix}${command}] [${groupName}]`,
+      //   // });
+      //   await loggerTg(
+      //     `${stats.commandExecuted}) [${prefix}${command}] [${groupName}]`
+      //   );
+      // }
 
       switch (command) {
-        case "stats": {
-          let statsMessage = "📛 PVX BOT STATS 📛\n";
+        // case "stats": {
+        //   let statsMessage = "📛 PVX BOT STATS 📛\n";
 
-          let key: keyof typeof stats;
-          // eslint-disable-next-line no-restricted-syntax
-          for (key in stats) {
-            if (Object.prototype.hasOwnProperty.call(stats, key)) {
-              statsMessage += `\n${key}: ${stats[key]}`;
-            }
-          }
+        //   let key: keyof typeof stats;
+        //   // eslint-disable-next-line no-restricted-syntax
+        //   for (key in stats) {
+        //     if (Object.prototype.hasOwnProperty.call(stats, key)) {
+        //       statsMessage += `\n${key}: ${stats[key]}`;
+        //     }
+        //   }
 
-          await reply(statsMessage);
-          return;
-        }
+        //   await reply(statsMessage);
+        //   return;
+        // }
 
         case "test":
           if (ownerNumberWithJid !== sender) {
@@ -461,10 +468,18 @@ export const messagesUpsert = async (
       if (matches.bestMatch.rating > 0.5) {
         message = `Did you mean ${prefix}${matches.bestMatch.target}\n\n${message}`;
       }
+
+      // const res = await bot.sendMessage("120363417696270115@newsletter", {
+      //   text: "hey",
+      // });
+      // const res2 = await bot.sendMessage("120363303907535182@g.us", {
+      //   text: "hey",
+      // });
+      // console.log(res, res2);
       await reply(message);
-      if (command) {
-        await addUnknownCmd(command);
-      }
+      // if (command) {
+      // await addUnknownCmd(command);
+      // }
     });
   } catch (err) {
     await loggerBot(bot, "messages.upsert", err, msgs);

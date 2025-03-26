@@ -9,7 +9,7 @@ import makeWASocket, {
 
 // eslint-disable-next-line import/no-extraneous-dependencies
 import pino from "pino";
-import cron from "node-cron";
+// import cron from "node-cron";
 
 /* ----------------------------- add local files ---------------------------- */
 import { setAuth, getAuth } from "./db/authDB";
@@ -18,31 +18,31 @@ import addCommands from "./functions/addCommands";
 import { addDefaultbadges, DefaultBadge } from "./functions/addDefaultBadges";
 import { stats, useStore } from "./utils/constants";
 import { Bot } from "./interfaces/Bot";
-import {
-  postBdayCron,
-  postNewsCron,
-  postNewsListCron,
-  postTodayStatsCron,
-} from "./functions/pvxFunctions";
-import {
-  groupParticipantsUpdate,
-  GroupParticipantUpdate,
-} from "./groupParticipantsUpdate";
+// import {
+//   postBdayCron,
+//   postNewsCron,
+//   postNewsListCron,
+//   postTodayStatsCron,
+// } from "./functions/pvxFunctions";
+// import {
+//   groupParticipantsUpdate,
+//   GroupParticipantUpdate,
+// } from "./groupParticipantsUpdate";
 import { msgRetryCounterCache } from "./utils/cache";
 import { messagesUpsert, MessageUpsert } from "./messagesUpsert";
 import { groupsUpsert, GroupsUpsert } from "./groupsUpsert";
-import { GroupsUpdate, groupsUpdate } from "./groupsUpdate";
+// import { GroupsUpdate, groupsUpdate } from "./groupsUpdate";
 // eslint-disable-next-line import/no-cycle
 import { ConnectionUpdate, connectionUpdate } from "./connectionUpdate";
 import { getIndianDateTime } from "./functions/getIndianDateTime";
-import { cronJobEnabled } from "./utils/config";
+// import { cronJobEnabled } from "./utils/config";
 
 stats.started = getIndianDateTime().toDateString();
 
-let bdayCronJob: cron.ScheduledTask | undefined;
-let newsCronJob: cron.ScheduledTask | undefined;
-let newsListCronJob: cron.ScheduledTask | undefined;
-let todayStatsCronJob: cron.ScheduledTask | undefined;
+// let bdayCronJob: cron.ScheduledTask | undefined;
+// let newsCronJob: cron.ScheduledTask | undefined;
+// let newsListCronJob: cron.ScheduledTask | undefined;
+// let todayStatsCronJob: cron.ScheduledTask | undefined;
 
 let defaultBadges: DefaultBadge = {};
 
@@ -88,10 +88,10 @@ const startBot = async () => {
       allCommandsName,
     } = await addCommands();
 
-    bdayCronJob?.stop();
-    newsCronJob?.stop();
-    newsListCronJob?.stop();
-    todayStatsCronJob?.stop();
+    // bdayCronJob?.stop();
+    // newsCronJob?.stop();
+    // newsListCronJob?.stop();
+    // todayStatsCronJob?.stop();
 
     const { version, isLatest } = await fetchLatestBaileysVersion();
     console.log(`using WA v${version.join(".")}, isLatest: ${isLatest}`);
@@ -117,12 +117,12 @@ const startBot = async () => {
 
     store?.bind(bot.ev);
 
-    if (cronJobEnabled === "true") {
-      bdayCronJob = await postBdayCron(bot);
-      newsCronJob = await postNewsListCron(bot);
-      newsListCronJob = await postNewsCron(bot);
-      todayStatsCronJob = await postTodayStatsCron(bot);
-    }
+    // if (cronJobEnabled === "true") {
+    //   bdayCronJob = await postBdayCron(bot);
+    //   newsCronJob = await postNewsListCron(bot);
+    //   newsListCronJob = await postNewsCron(bot);
+    //   todayStatsCronJob = await postTodayStatsCron(bot);
+    // }
 
     let botNumberJid = bot.user ? bot.user.id : ""; // '1506xxxxx54:3@s.whatsapp.net'
     botNumberJid =
@@ -134,18 +134,18 @@ const startBot = async () => {
       await groupsUpsert(msgs, bot);
     });
 
-    bot.ev.on("groups.update", async (msgs: GroupsUpdate) => {
-      // subject change, admin only chat, admin can edit subject, etc
-      await groupsUpdate(msgs, bot);
-    });
+    // bot.ev.on("groups.update", async (msgs: GroupsUpdate) => {
+    //   // subject change, admin only chat, admin can edit subject, etc
+    //   await groupsUpdate(msgs, bot);
+    // });
 
-    bot.ev.on(
-      "group-participants.update",
-      async (msg: GroupParticipantUpdate) => {
-        // participant add, remove, promote, demote
-        await groupParticipantsUpdate(msg, bot, botNumberJid);
-      }
-    );
+    // bot.ev.on(
+    //   "group-participants.update",
+    //   async (msg: GroupParticipantUpdate) => {
+    //     // participant add, remove, promote, demote
+    //     await groupParticipantsUpdate(msg, bot, botNumberJid);
+    //   }
+    // );
 
     bot.ev.on("messages.upsert", async (msgs: MessageUpsert) => {
       // new message
@@ -164,9 +164,9 @@ const startBot = async () => {
 
     bot.ev.on("connection.update", async (update: ConnectionUpdate) => {
       const res = await connectionUpdate(update, bot);
-      if (update.connection === "open") {
-        defaultBadges = await addDefaultbadges(bot);
-      }
+      // if (update.connection === "open") {
+      //   defaultBadges = await addDefaultbadges(bot);
+      // }
 
       if (res !== 0) {
         setTimeout(async () => {

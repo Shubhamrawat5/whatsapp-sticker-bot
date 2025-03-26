@@ -6,7 +6,6 @@ import {
 import { createSticker, Exif } from "wa-sticker-formatter";
 import { Bot } from "../interfaces/Bot";
 // import { pvxgroups } from "../utils/constants";
-import { Readable } from "stream";
 
 // TODO: GLOBAL VARIALBES
 let countSent = 0;
@@ -26,7 +25,8 @@ const forwardSticker = async (
   //   return false;
   // }
 
-  console.log(JSON.stringify(downloadFilePath));
+  delete downloadFilePath.contextInfo;
+  // console.log(JSON.stringify(downloadFilePath));
 
   try {
     const stickerChecksum = downloadFilePath.fileSha256
@@ -65,7 +65,7 @@ const forwardSticker = async (
     // console.log(plaintext);
     // console.log(webpWithExif);
 
-    // console.log("STICKER!");
+    console.log("STICKER!");
 
     // const bufferStream = new Readable();
     // bufferStream._read = () => {}; // _read is required, but we don't need to implement it

@@ -1,5 +1,6 @@
 import {
   downloadContentFromMessage,
+  generateWAMessageContent,
   proto,
   toBuffer,
 } from "@whiskeysockets/baileys";
@@ -19,13 +20,9 @@ const forwardSticker = async (
   bot: Bot,
   downloadFilePath: proto.Message.IStickerMessage
 ): Promise<boolean> => {
-  // const randomBoolean = Math.random() < 0.5;
-  // if (!randomBoolean) {
-  //   console.log("RandomBoolean", randomBoolean);
-  //   return false;
-  // }
-
+  // console.log(JSON.stringify(downloadFilePath));
   delete downloadFilePath.contextInfo;
+  // delete downloadFilePath.stickerSentTs;
   // console.log(JSON.stringify(downloadFilePath));
 
   try {
@@ -59,9 +56,6 @@ const forwardSticker = async (
     //   author: "pvxcommunity.com",
     // });
 
-    const plaintext = proto.Message.encode({
-      stickerMessage: downloadFilePath,
-    }).finish();
     // console.log(plaintext);
     // console.log(webpWithExif);
 
@@ -93,17 +87,40 @@ const forwardSticker = async (
     //   content: [plaintextNode],
     // };
 
-    // Send the query
+    const stickerChannel = "120363417696270115@newsletter";
+    const testingChannel = "120363398801923614@newsletter";
+
+    // downloadFilePath: proto.Message.IStickerMessage = {"url":"https://mmg.whatsapp.net/v/t62.15575-24/20114955_1268558591671875_2661400770449298109_n.enc?ccb=11-4&oh=01_Q5AaITkNWfmOo2ay9UShczqROHUoLX_kRWnl8AanI-X8Fk89&oe=680CC14E&_nc_sid=5e03e0&mms3=true","fileSha256":"2+jlTtrDhRkth3kI1GV244doPwYfFBkjaxZtmuJnmQI=","fileEncSha256":"diOsNG4yfGTd3M8Ei8D2uL4Z5M6sFJ51unHwJIby1pU=","mediaKey":"Gv6BsgpIfHnx4XBXG6Fql2yjBv+UtjllYVTNAqRFR8Q=","mimetype":"image/webp","directPath":"/v/t62.15575-24/20114955_1268558591671875_2661400770449298109_n.enc?ccb=11-4&oh=01_Q5AaITkNWfmOo2ay9UShczqROHUoLX_kRWnl8AanI-X8Fk89&oe=680CC14E&_nc_sid=5e03e0","fileLength":"80312","mediaKeyTimestamp":"1743086060","isAnimated":false,"stickerSentTs":"1743086060312","isAvatar":false,"isAiSticker":false,"isLottie":false}
+    const plaintext = proto.Message.encode({
+      stickerMessage: downloadFilePath,
+    }).finish();
+
+    // const msg = await generateWAMessageContent(
+    //   { sticker: webpWithExif },
+    //   {
+    //     upload: bot.waUploadToServer,
+    //   }
+    // );
+    // console.log("==============");
+    // console.log(JSON.stringify(msg));
+    // console.log("==============");
+
+    // const plaintext2 = proto.Message.encode({
+    //   stickerMessage: msg.stickerMessage,
+    // }).finish();
+
+    // https://github.com/nazedev/hitori/blob/554ebe6f24ef46ddcd9cd33e352f938e72ffabaf/src/message.js#L587
+
     await bot.query({
       tag: "message",
       attrs: {
-        to: "120363417696270115@newsletter",
-        type: "text",
+        to: stickerChannel,
+        type: "media",
       },
       content: [
         {
           tag: "plaintext",
-          attrs: {},
+          attrs: { mediatype: "sticker" },
           content: plaintext,
         },
       ],
